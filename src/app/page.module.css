@@ -91,7 +91,9 @@
   gap: 0.5rem;
   transition: color 0.2s;
 }
-
+.navItem span{
+  font-size: 17px;
+}
 .navItem:hover {
   color: #ff0000;
 }
@@ -102,7 +104,7 @@
 
 .icon {
   width: 24px;
-  height: 24px;
+  height: 18px;
 }
 
 .menuButton {
@@ -135,7 +137,7 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.menuIcon {
+/* .menuIcon {
   width: 20px;
   height: 20px;
 }
@@ -144,7 +146,7 @@
   width: 24px;
   height: 24px;
   color: #333;
-}
+} */
 
 .quickCategories {
   display: flex;

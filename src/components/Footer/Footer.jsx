@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Facebook, Instagram, Twitter, MapPin, Phone, Mail, QrCode } from 'lucide-react';
+import { Facebook, Instagram, Twitter, MapPin, Phone, Mail, QrCode, FileText } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -57,7 +57,11 @@ export default function Footer() {
             <div className={styles.contact}>
               <div className={styles.contactItem}>
                 <MapPin size={18} />
-                <span> Rue du Commerce, DOUALA</span>
+                <span> Rue du Commerce, DOUALA</span> 
+              </div>
+              <div className={styles.contactItem}>
+                <FileText size={18} />
+                <span>24h/7</span>
               </div>
               <div className={styles.contactItem}>
                 <Phone size={18} />

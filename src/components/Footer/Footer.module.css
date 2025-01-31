@@ -1,6 +1,6 @@
 .footer {
-  background-color: #d31d1d;
-  color: #000;
+  background-color: #000;
+  color: #fff;
   padding: 4rem 2rem 2rem;
 }
 
@@ -86,12 +86,12 @@
 
 .listItem {
   margin-bottom: 0.75rem;
-  color: #ccc;
+  color: #fff;
   transition: color 0.3s ease;
 }
 
 .listItem:hover {
-  color: #fff;
+  color: #ffff;
 }
 
 .contact {
@@ -104,7 +104,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #ccc;
+  color: #ffff;
 }
 
 .bottomSection {

@@ -1,8 +1,11 @@
 import React from 'react';
 import styles from './page.module.css';
+import Header from '../components/Header';
 
 const NotificationPage = () => {
   return (
+    <>
+    <Header/>
     <div className={styles.container}>
       <h1>Notifications</h1>
       <div className={styles.notificationList}>
@@ -18,6 +21,7 @@ const NotificationPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,3 +1,8 @@
+.pageContainer {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -5,10 +10,47 @@
 }
 
 .container h1 {
-  color: #000;
+  color: #333;
   margin-bottom: 2rem;
   font-size: 2rem;
-  text-align: center;
+}
+
+.banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.orderCount {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.deleteAllButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #ff0000;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.deleteAllButton:hover {
+  background: #cc0000;
+}
+
+.deleteAllButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .orderList {
@@ -19,66 +61,183 @@
 
 .order {
   background: white;
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.order:hover {
-  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .orderHeader {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid #eee;
 }
 
-.orderHeader h3 {
-  color: #000;
-  margin: 0;
+.productImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.productImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.headerInfo h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
   font-size: 1.2rem;
 }
 
-.status {
-  background-color: #4CAF50;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
+.price {
+  color: #ff0000;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.deleteButton:hover {
+  color: #ff0000;
+  background: rgba(255, 0, 0, 0.1);
 }
 
 .orderDetails {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
 }
 
-.orderDetails p {
+.detailsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detailsSection h4 {
+  color: #333;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.detailsSection p {
   margin: 0;
   color: #666;
-  font-size: 0.95rem;
   line-height: 1.5;
 }
 
-.price {
+.detailsSection strong {
+  color: #333;
+}
+
+.timeInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.timeInfo svg {
+  color: #ff0000;
+}
+
+.deliveryTime {
+  margin-top: 0.5rem !important;
+  padding: 0.5rem;
+  background: #f8f8f8;
+  border-radius: 6px;
   color: #ff0000 !important;
-  font-weight: 600;
-  font-size: 1.1rem !important;
+  font-weight: 500 !important;
 }
 
 .noOrders {
   text-align: center;
   color: #666;
   padding: 2rem;
-  background: #f8f8f8;
-  border-radius: 10px;
-  font-size: 1.1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modalContent h2 {
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.modalContent p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.confirmButton, .cancelButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirmButton {
+  background: #ff0000;
+  color: white;
+}
+
+.confirmButton:hover {
+  background: #cc0000;
+}
+
+.cancelButton {
+  background: #eee;
+  color: #666;
+}
+
+.cancelButton:hover {
+  background: #ddd;
 }
 
 @media (max-width: 768px) {
@@ -90,9 +249,22 @@
     grid-template-columns: 1fr;
   }
 
-  .orderHeader {
+  .banner {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
+  }
+
+  .orderHeader {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .productImage {
+    margin: 0 auto;
+  }
+
+  .deleteButton {
+    margin: 0 auto;
   }
 }
