@@ -4,12 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
+  const { user, login, logout, checkAuth } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''

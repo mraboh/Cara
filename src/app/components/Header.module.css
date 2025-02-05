@@ -89,6 +89,494 @@
   transition: background-color 0.2s;
   border-bottom: 1px solid #eee;
 }
+/* Header.module.css */
+.userMenuContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.userButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.userAvatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #ff4242; /* Red circle as requested */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.userButton:hover .userAvatar {
+  background-color: #e63939;
+}
+
+.userDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 250px;
+  z-index: 1000;
+  padding: 12px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.userAvatarLarge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #ff4242;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 12px;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: 600;
+  color: #333;
+}
+
+.userEmail {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.dropdownMenu {
+  padding-top: 8px;
+}
+.cartIconWrapper {
+  position: relative;
+  display: inline-flex;
+}
+/* Add these styles to your Header.module.css */
+
+.notificationContainer {
+  position: relative;
+  z-index: 50;
+}
+
+.iconButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.iconButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.bellIcon {
+  color: #4b5563;
+  transition: transform 0.2s ease;
+}
+
+.iconButton:hover .bellIcon {
+  transform: rotate(15deg);
+}
+
+.badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  height: 20px;
+  min-width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0 6px;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown {
+  position: absolute;
+  right: -16px;
+  top: calc(100% + 12px);
+  width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.notificationList {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.notificationList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notificationList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notificationList::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 3px;
+}
+
+.notification {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  background: white;
+  transition: all 0.2s ease;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.notification:not(.read) {
+  background: #f8fafc;
+}
+
+.notification:hover {
+  background: #f1f5f9;
+}
+
+.notificationContent {
+  flex: 1;
+}
+
+.notificationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.notificationHeader h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.notification p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.actionButton {
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionButton:hover {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.emptyState {
+  padding: 40px 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Add a notification icon to empty state */
+.emptyState::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 48px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'%3E%3C/path%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+}
+/* First, ensure the header has proper z-index and positioning */
+.header {
+  position: relative;
+  z-index: 50;
+  /* ... other existing header styles ... */
+}
+
+.headerContent {
+  position: relative;
+  /* ... other existing headerContent styles ... */
+}
+
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  /* ... other existing desktopNav styles ... */
+}
+
+/* Adjust notification container positioning */
+.notificationContainer {
+  position: relative;
+  z-index: 51; /* Higher than header */
+}
+
+/* Adjust the notification dropdown positioning */
+.dropdown {
+  position: absolute;
+  right: -16px;
+  top: calc(100% + 12px);
+  width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 52; /* Higher than notification container */
+}
+
+/* Ensure the notification button stays above other elements */
+.iconButton {
+  position: relative;
+  z-index: 51;
+  /* ... other existing iconButton styles ... */
+}
+
+/* Add positioning for the user menu container */
+.userMenuContainer {
+  position: relative;
+  z-index: 50;
+}
+
+/* Adjust user dropdown positioning */
+.userDropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 50;
+  /* ... other existing userDropdown styles ... */
+}
+
+/* Add styles for notification message formatting */
+.messageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.messageDetail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.messageLabel {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.messageValue {
+  color: #1e293b;
+  font-weight: 400;
+}
+
+/* Ensure the notification list has proper scrolling */
+.notificationList {
+  max-height: 400px;
+  overflow-y: auto;
+  background: white;
+}
+
+/* Add proper spacing for notification items */
+.notification {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.notificationContent {
+  flex: 1;
+}
+
+/* Make sure the header of notifications stays on top */
+.header {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Add these styles for better message formatting */
+.messageContent {
+  display: grid;
+  gap: 4px;
+}
+
+.messageDetail {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.messageLabel {
+  color: #64748b;
+}
+
+.messageValue {
+  font-weight: 500;
+}
+
+.cartCount {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  width: 100%;
+  border: none;
+  background: none;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #f5f5f5;
+  border-radius: 6px;
+}
 
 .searchResultItem:last-child {
   border-bottom: none;

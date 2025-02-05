@@ -1,79 +1,90 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './SignUpForm.module.css';
-import { Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./SignUpForm.module.css";
+import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function SignUpForm() {
   const router = useRouter();
+  const { signup } = useAuth();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    setError('');
+    setError("");
+  };
+
+  const validateForm = () => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.password
+    ) {
+      throw new Error("Veuillez remplir tous les champs");
+    }
+
+    if (!formData.email.includes("@")) {
+      throw new Error("Veuillez entrer un email valide");
+    }
+
+    if (formData.password.length < 6) {
+      throw new Error("Le mot de passe doit contenir au moins 6 caractères");
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      throw new Error("Les mots de passe ne correspondent pas");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsSubmitting(true);
 
-    // Validation rapide des champs requis
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-      setError('Veuillez remplir tous les champs');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Validation de l'email
-    if (!formData.email.includes('@')) {
-      setError('Veuillez entrer un email valide');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Validation du mot de passe
-    if (formData.password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
-      // Simuler un délai d'enregistrement
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Validate form
+      validateForm();
 
-      // Stocker les informations d'inscription dans le localStorage
-      localStorage.setItem('registeredUser', JSON.stringify({
+      // Call signup from AuthContext
+      await signup({
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email
-      }));
+        email: formData.email,
+        password: formData.password,
+      });
 
-      // Rediriger vers la page de connexion avec le nom
+      // Store registration info for welcome message
+      localStorage.setItem(
+        "registeredUser",
+        JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+        })
+      );
+
+      // Redirect to login page with welcome message
       router.push(`/login?name=${encodeURIComponent(formData.firstName)}`);
     } catch (error) {
-      setError('Une erreur est survenue lors de l\'inscription');
+      setError(
+        error.message || "Une erreur est survenue lors de l'inscription"
+      );
       setIsSubmitting(false);
     }
   };
@@ -82,9 +93,9 @@ export default function SignUpForm() {
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <h2>Créer un compte</h2>
-        
+
         {error && <div className={styles.error}>{error}</div>}
-        
+
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <div className={styles.inputWrapper}>
@@ -180,7 +191,7 @@ export default function SignUpForm() {
             className={styles.submitButton}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Inscription en cours...' : 'S\'inscrire'}
+            {isSubmitting ? "Inscription en cours..." : "S'inscrire"}
           </button>
         </form>
       </div>

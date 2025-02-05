@@ -1,49 +1,24 @@
-'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../context/AuthContext';
+// components/ProtectedRoute.js
+"use client";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function ProtectedRoute({ children }) {
+  const { user } = useAuth();
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Vérifier si l'utilisateur est déjà sur la page de connexion
-    const isLoginPage = window.location.pathname === '/login';
-    
-    if (!loading) {
-      if (!user && !isLoginPage) {
-        // Rediriger vers la page de connexion si non connecté
-        router.push('/login');
-      } else if (user && isLoginPage) {
-        // Rediriger vers la page d'accueil si déjà connecté
-        router.push('/');
-      }
+    if (!user && typeof window !== "undefined") {
+      router.push("/login");
     }
-  }, [user, loading, router]);
+    setIsLoading(false);
+  }, [user, router]);
 
-  // Afficher un écran de chargement pendant la vérification
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <div className="spinner"></div>
-      </div>
-    );
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
-  // Vérifier si on est sur la page de connexion
-  const isLoginPage = window.location.pathname === '/login';
-
-  // Si non connecté et pas sur la page de connexion, ne rien afficher
-  if (!user && !isLoginPage) {
-    return null;
-  }
-
-  // Si connecté et sur la page de connexion, ne rien afficher
-  if (user && isLoginPage) {
-    return null;
-  }
-
-  // Sinon, afficher le contenu
-  return children;
+  return user ? children : null;
 }
