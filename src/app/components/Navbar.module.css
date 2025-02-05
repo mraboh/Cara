@@ -1,0 +1,91 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  color: #ff0000;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.logo:hover {
+  color: #cc0000;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.welcome {
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.loginButton,
+.logoutButton {
+  padding: 0.4rem 1rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.loginButton {
+  background: #ff0000;
+  color: white;
+  text-decoration: none;
+  border: none;
+}
+
+.loginButton:hover {
+  background: #cc0000;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(255, 0, 0, 0.2);
+}
+
+.logoutButton {
+  background: none;
+  border: 1px solid #ff0000;
+  color: #ff0000;
+}
+
+.logoutButton:hover {
+  background: #fff5f5;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
+  .welcome {
+    display: none;
+  }
+
+  .navLinks {
+    gap: 0.8rem;
+  }
+
+  .loginButton,
+  .logoutButton {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}

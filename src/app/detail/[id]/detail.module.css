@@ -1,205 +1,192 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
 }
 
-.backButton {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: none;
-  border: none;
-  color: #333;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  margin-bottom: 2rem;
-  transition: transform 0.3s ease;
-}
-
-.backButton:hover {
-  transform: translateX(-5px);
-}
-
-.productDetail {
+.productDetails {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
   background: white;
   border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  margin-top: 10%;
 }
 
 .imageSection {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  position: relative;
-}
-
-.mainImage {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  aspect-ratio: 1;
-}
-
-.mainImage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.prevButton,
-.nextButton {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.8);
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.2rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.prevButton {
-  left: 1rem;
-}
-
-.nextButton {
-  right: 1rem;
-}
-
-.prevButton:hover,
-.nextButton:hover {
-  background: white;
-  transform: translateY(-50%) scale(1.1);
+  gap: 1rem;
 }
 
 .thumbnails {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: 400px;
-  overflow-y: auto;
   padding-right: 0.5rem;
 }
 
 .thumbnail {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  opacity: 0.7;
-  transition: all 0.3s ease;
   border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .thumbnail:hover {
-  opacity: 1;
-  transform: translateX(2px);
+  transform: translateY(-2px);
 }
 
 .thumbnail.active {
-  opacity: 1;
   border-color: #ff0000;
 }
 
-.info {
+.mainImage {
+  flex: 1;
+  height: 450px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mainImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.mainImage:hover img {
+  transform: scale(1.03);
+}
+
+.infoContainer {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.2rem;
+  padding: 0.5rem;
 }
 
-.info h1 {
+.title {
+  font-size: 1.8rem;
+  color: #2d3436;
   margin: 0;
-  color: #333;
-  font-size: 2rem;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.stars {
-  display: flex;
-  gap: 0.25rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .description {
-  color: #666;
+  color: #636e72;
   line-height: 1.6;
-  margin: 0;
+  font-size: 1rem;
 }
 
 .priceSection {
-  margin: 1rem 0;
-}
-
-.prices {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.priceLabel {
+  font-size: 1.1rem;
+  color: #636e72;
+  font-weight: 500;
 }
 
 .price {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1rem;
   color: #ff0000;
+  font-weight: 100;
+  letter-spacing: -0.5px;
 }
 
-.oldPrice {
-  color: #999;
-  text-decoration: line-through;
+.sizeSection {
+  margin-top: 0.5rem;
+}
+
+.sizeSection h3 {
   font-size: 1.1rem;
+  color: #2d3436;
+  margin-bottom: 0.8rem;
+  font-weight: 100;
 }
 
-.sizes {
-  margin: 1.5rem 0;
-}
-
-.sizes h3 {
-  margin: 0 0 1rem 0;
-  color: #333;
-}
-
-.sizeButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+.sizeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .sizeButton {
-  padding: 0.75rem 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  width: 60px;
+  height: 50px;
+  background: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 1rem;
-  color: #333;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
 }
 
 .sizeButton:hover {
   border-color: #ff0000;
-  color: #ff0000;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(255, 0, 0, 0.15);
 }
 
 .sizeButton.selected {
-  background: #ff0000;
-  color: white;
   border-color: #ff0000;
+  background-color: #fff5f5;
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+}
+
+.sizeButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sizeButton:hover::before {
+  opacity: 1;
+}
+
+.sizeButton span {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #333;
+  position: relative;
+  z-index: 1;
 }
 
 .buttonGroup {
@@ -209,96 +196,104 @@
   margin-top: auto;
 }
 
-.addToCartButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  background: white;
-  color: #333;
-  border: 2px solid #333;
-  padding: 0.75rem;
+.orderButton,
+.cartButton {
+  width: 60%;
+  max-width: 300px;
+  padding: 0.8rem 1rem;
+  border: none;
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 200;
+  font-weight: 300;
   cursor: pointer;
-  transition: all 0.3s ease;
-  width: 200px;
-  margin: 0 auto;
-}
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
-.addToCartButton:hover {
-  background: #000;
-  color: white;
-  transform: translateY(-2px);
-}
-
-.addToCartButton:disabled {
-  background: #f5f5f5;
-  border-color: #ddd;
-  color: #999;
-  cursor: not-allowed;
-  transform: none;
 }
 
 .orderButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  background: #ff0000;
+  background-color: #ff0000;
   color: white;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 200;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 200px;
-  margin: 0 auto;
 }
 
-.orderButton:hover {
-  background: #cc0000;
+.cartButton {
+  background-color: #2d3436;
+  color: white;
+  margin-bottom: 40px;
+}
+
+.button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.orderButton:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
+.error {
+  color: #ff0000;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
 }
 
-@media (max-width: 1024px) {
-  .productDetail {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+.success {
+  color: #00a854;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 1rem;
+  .productDetails {
+    grid-template-columns: 1fr;
   }
 
-  .productDetail {
-    padding: 1rem;
+  .imageSection {
+    flex-direction: column-reverse;
   }
 
-  .info h1 {
+  .thumbnails {
+    flex-direction: row;
+    padding-right: 0;
+    padding-top: 0.5rem;
+    justify-content: center;
+  }
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mainImage {
+    height: 350px;
+  }
+
+  .title {
     font-size: 1.5rem;
   }
 
-  .price {
-    font-size: 1.25rem;
+  .sizeGrid {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   }
+}
 
-  .sizeButtons {
-    gap: 0.5rem;
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-
-  .sizeButton {
-    padding: 0.5rem 1rem;
+  to {
+    opacity: 1;
   }
 }

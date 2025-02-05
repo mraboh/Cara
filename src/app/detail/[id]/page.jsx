@@ -1,18 +1,19 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
-import { products } from '../../data/products';
+import { useRouter } from 'next/navigation';
 import styles from './detail.module.css';
+import { products } from '../../data/products';
 import OrderForm from '../../components/OrderForm';
-import { useParams, useRouter } from 'next/navigation';
-import { Star, ShoppingCart, ArrowLeft } from 'lucide-react';
-import Header from '../../components/Header';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function DetailPage({ params }) {
-  const [selectedSize, setSelectedSize] = useState('');
-  const [showOrderForm, setShowOrderForm] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const router = useRouter();
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [error, setError] = useState('');
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(null);
 
   const product = products.find(p => p.id === parseInt(params.id));
 
@@ -22,158 +23,139 @@ export default function DetailPage({ params }) {
 
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
+    setCurrentPrice(product.price[size]);
+    setError('');
+    setAddedToCart(false);
   };
 
-  const handleOrder = () => {
+  const handleOrderClick = () => {
     if (!selectedSize) {
-      alert('Veuillez sélectionner une taille');
+      setError('Veuillez sélectionner une taille');
       return;
     }
     setShowOrderForm(true);
   };
 
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => 
-      prev === 0 ? product.images.length - 1 : prev - 1
-    );
-  };
+  const handleCartClick = () => {
+    if (!selectedSize) {
+      setError('Veuillez sélectionner une taille');
+      return;
+    }
 
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) => 
-      prev === product.images.length - 1 ? 0 : prev + 1
+    // Récupérer le panier existant ou créer un nouveau
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // Créer l'item à ajouter au panier
+    const cartItem = {
+      id: product.id,
+      title: product.title,
+      image: product.image,
+      size: selectedSize,
+      price: product.price[selectedSize],
+      quantity: 1
+    };
+
+    // Vérifier si le produit existe déjà dans le panier avec la même taille
+    const existingItemIndex = cart.findIndex(
+      item => item.id === cartItem.id && item.size === cartItem.size
     );
+
+    if (existingItemIndex !== -1) {
+      // Si le produit existe, augmenter la quantité
+      cart[existingItemIndex].quantity += 1;
+    } else {
+      // Sinon, ajouter le nouveau produit
+      cart.push(cartItem);
+    }
+
+    // Sauvegarder le panier mis à jour
+    localStorage.setItem('cart', JSON.stringify(cart));
+    setAddedToCart(true);
+
+    // Rediriger vers le panier après un court délai
+    setTimeout(() => {
+      router.push('/panier');
+    }, 1000);
   };
 
   return (
-    <div className={styles.container}>
-      <Header />
-      
-      <button 
-        onClick={() => router.back()} 
-        className={styles.backButton}
-      >
-        <ArrowLeft size={20} />
-        Retour
-      </button>
-
-      <div className={styles.productDetail}>
-        <div className={styles.imageSection}>
-          <div className={styles.mainImage}>
-            <Image
-              src={product.images[currentImageIndex]}
-              alt={product.title}
-              width={400}
-              height={400}
-              objectFit="cover"
-              priority
-            />
-            <button className={styles.prevButton} onClick={handlePrevImage}>
-              &#10094;
-            </button>
-            <button className={styles.nextButton} onClick={handleNextImage}>
-              &#10095;
-            </button>
-          </div>
-          
-          <div className={styles.thumbnails}>
-            {product.images.map((image, index) => (
-              <div 
-                key={index}
-                className={`${styles.thumbnail} ${currentImageIndex === index ? styles.active : ''}`}
-                onClick={() => setCurrentImageIndex(index)}
-              >
-                <Image
-                  src={image}
-                  alt={`${product.title} - vue ${index + 1}`}
-                  width={80}
-                  height={80}
-                  objectFit="cover"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.info}>
-          <h1>{product.title}</h1>
-          
-          <div className={styles.rating}>
-            <div className={styles.stars}>
-              {[...Array(5)].map((_, index) => (
-                <Star
+    <ProtectedRoute>
+      <div className={styles.container}>
+        <div className={styles.productDetails}>
+          <div className={styles.imageSection}>
+            <div className={styles.thumbnails}>
+              {product.similarImages.map((img, index) => (
+                <div
                   key={index}
-                  size={20}
-                  fill={index < Math.floor(product.rating) ? "#ffd700" : "none"}
-                  color={index < Math.floor(product.rating) ? "#ffd700" : "#ddd"}
-                />
-              ))}
-            </div>
-            <span>{product.rating} ({product.reviews} avis)</span>
-          </div>
-
-          <p className={styles.description}>{product.description}</p>
-
-          <div className={styles.priceSection}>
-            <div className={styles.prices}>
-              <span className={styles.price}>
-                {selectedSize ? `${product.price[selectedSize]} FCFA` : 'Sélectionnez une taille'}
-              </span>
-              {selectedSize && (
-                <span className={styles.oldPrice}>{product.oldPrice} FCFA</span>
-              )}
-            </div>
-          </div>
-
-          <div className={styles.sizes}>
-            <h3>Tailles disponibles</h3>
-            <div className={styles.sizeButtons}>
-              {product.sizes.map((size) => (
-                <button
-                  key={size}
-                  className={`${styles.sizeButton} ${selectedSize === size ? styles.selected : ''}`}
-                  onClick={() => handleSizeSelect(size)}
+                  className={`${styles.thumbnail} ${selectedImage === index ? styles.active : ''}`}
+                  onClick={() => setSelectedImage(index)}
                 >
-                  {size}
-                </button>
+                  <img src={img} alt={`${product.title} vue ${index + 1}`} />
+                </div>
               ))}
             </div>
+            <div className={styles.mainImage}>
+              <img src={product.similarImages[selectedImage]} alt={product.title} />
+            </div>
           </div>
+          
+          <div className={styles.infoContainer}>
+            <h1 className={styles.title}>{product.title}</h1>
+            <p className={styles.description}>{product.description}</p>
+            
+            <div className={styles.sizeSection}>
+              <h3>Sélectionnez votre taille</h3>
+              <div className={styles.sizeGrid}>
+                {Object.keys(product.price).map((size) => (
+                  <button
+                    key={size}
+                    className={`${styles.sizeButton} ${selectedSize === size ? styles.selected : ''}`}
+                    onClick={() => handleSizeSelect(size)}
+                  >
+                    <span>{size}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-          <div className={styles.buttonGroup}>
-            <button 
-              className={styles.addToCartButton}
-              onClick={() => {
-                if (!selectedSize) {
-                  alert('Veuillez sélectionner une taille');
-                  return;
-                }
-                // Logique pour ajouter au panier
-                alert('Produit ajouté au panier');
-              }}
-              disabled={!selectedSize}
-            >
-              <ShoppingCart size={20} />
-              Ajouter au panier
-            </button>
+            {selectedSize && (
+              <div className={styles.priceSection}>
+                <span className={styles.priceLabel}>Prix :</span>
+                <span className={styles.price}>{currentPrice} fcfa</span>
+              </div>
+            )}
 
-            <button 
-              className={styles.orderButton}
-              onClick={handleOrder}
-              disabled={!selectedSize}
-            >
-              Commander 
-            </button>
+            {error && <p className={styles.error}>{error}</p>}
+            {addedToCart && <p className={styles.success}>Produit ajouté au panier !</p>}
+
+            <div className={styles.buttonGroup}>
+              <button 
+                className={styles.orderButton}
+                onClick={handleOrderClick}
+                disabled={addedToCart}
+              >
+                Commander
+              </button>
+              
+              <button 
+                className={styles.cartButton}
+                onClick={handleCartClick}
+                disabled={addedToCart}
+              >
+                {addedToCart ? 'Ajouté !' : 'Ajouter au panier'}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {showOrderForm && (
-        <OrderForm 
-          product={product} 
-          selectedSize={selectedSize}
-          onClose={() => setShowOrderForm(false)}
-        />
-      )}
-    </div>
+        {showOrderForm && (
+          <OrderForm
+            product={product}
+            selectedSize={selectedSize}
+            onClose={() => setShowOrderForm(false)}
+          />
+        )}
+      </div>
+    </ProtectedRoute>
   );
 }

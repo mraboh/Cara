@@ -1,211 +1,143 @@
 'use client';
-import { useState, useEffect } from 'react';
 import styles from './page.module.css';
-import { Trash2, Clock } from 'lucide-react';
-import Header from '../components/Header';
-import Image from 'next/image';
+import useOrderStore from '../store/orderStore';
+import { Trash2 } from 'lucide-react';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function CommandesPage() {
-  const [orders, setOrders] = useState([]);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [orderToDelete, setOrderToDelete] = useState(null);
-  const [elapsedTimes, setElapsedTimes] = useState({});
+  const { orders, updateRemainingTime, updateOrderStatus } = useOrderStore();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
   useEffect(() => {
-    // Charger les commandes au montage du composant
-    const loadOrders = () => {
-      const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-      setOrders(savedOrders);
-    };
-
-    loadOrders();
-    // Actualiser les commandes toutes les secondes
-    const interval = setInterval(loadOrders, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    // Mettre à jour les temps écoulés toutes les secondes
-    const interval = setInterval(() => {
-      const times = {};
+    const timer = setInterval(() => {
       orders.forEach(order => {
-        const orderDate = new Date(order.orderDate);
-        const now = new Date();
-        const elapsed = Math.floor((now - orderDate) / 1000); // en secondes
-        times[order.orderTime] = formatElapsedTime(elapsed);
+        if (order.status === 'en cours') {
+          const newRemainingTime = order.remainingTime - 1;
+          
+          if (newRemainingTime <= 0) {
+            updateOrderStatus(order.id, 'livré');
+          } else {
+            updateRemainingTime(order.id, newRemainingTime);
+          }
+        }
       });
-      setElapsedTimes(times);
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [orders]);
+    return () => clearInterval(timer);
+  }, [orders, updateRemainingTime, updateOrderStatus]);
 
-  const formatElapsedTime = (seconds) => {
-    if (seconds < 60) {
-      return `${seconds} seconde${seconds > 1 ? 's' : ''}`;
-    }
+  const formatRemainingTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) {
-      return `${minutes} minute${minutes > 1 ? 's' : ''}`;
-    }
-    const hours = Math.floor(minutes / 60);
-    return `${hours} heure${hours > 1 ? 's' : ''}`;
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
-      month: 'long',
-      day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     });
   };
 
-  const calculateRemainingTime = (deliveryDate) => {
-    const now = new Date();
-    const delivery = new Date(deliveryDate);
-    const remaining = delivery - now;
-    
-    if (remaining <= 0) {
-      return "Livraison en cours";
-    }
+  const handleDeleteClick = (orderId) => {
+    setShowDeleteConfirm(orderId);
+  };
 
-    const hours = Math.floor(remaining / (1000 * 60 * 60));
-    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-
-    return `${hours}h ${minutes}min restantes`;
+  const handleDeleteConfirm = (orderId) => {
+    // Supprimer la commande
+    const updatedOrders = orders.filter(order => order.id !== orderId);
+    // Mettre à jour le store
+    useOrderStore.setState({ orders: updatedOrders });
+    setShowDeleteConfirm(null);
   };
 
   const handleDeleteAll = () => {
-    if (orders.length > 0) {
-      setShowConfirmDelete(true);
-      setOrderToDelete(null);
-    }
-  };
-
-  const handleDeleteSingle = (order) => {
-    setShowConfirmDelete(true);
-    setOrderToDelete(order);
-  };
-
-  const confirmDelete = () => {
-    if (orderToDelete === null) {
-      localStorage.setItem('orders', '[]');
-      setOrders([]);
-    } else {
-      const updatedOrders = orders.filter(o => o.orderTime !== orderToDelete.orderTime);
-      localStorage.setItem('orders', JSON.stringify(updatedOrders));
-      setOrders(updatedOrders);
-    }
-    setShowConfirmDelete(false);
+    // Mettre à jour le store avec un tableau vide
+    useOrderStore.setState({ orders: [] });
   };
 
   return (
-    <div className={styles.pageContainer}>
-      <Header />
+    <ProtectedRoute>
       <div className={styles.container}>
         <h1>Mes Commandes</h1>
         
         <div className={styles.banner}>
           <span className={styles.orderCount}>
-            {orders.length} commande{orders.length !== 1 ? 's' : ''} 
+            ({orders.length}) commande{orders.length !== 1 ? 's' : ''}
           </span>
-          <button 
-            className={styles.deleteAllButton}
-            onClick={handleDeleteAll}
-            disabled={orders.length === 0}
-          >
-            <Trash2 size={18} />
-            Supprimer toutes les commandes
-          </button>
+          {orders.length > 0 && (
+            <button className={styles.deleteAllButton} onClick={handleDeleteAll}>
+              <Trash2 size={18} />
+              Supprimer les commandes
+            </button>
+          )}
         </div>
-
+        
         <div className={styles.orderList}>
-          {orders.map((order) => (
-            <div key={order.orderTime} className={styles.order}>
+          {orders.map(order => (
+            <div key={order.id} className={styles.orderCard}>
               <div className={styles.orderHeader}>
-                <div className={styles.productImage}>
-                  <Image
-                    src={order.image}
-                    alt={order.productName}
-                    width={100}
-                    height={100}
-                    objectFit="cover"
-                  />
+                <h3>{order.product.title}</h3>
+                <div className={styles.headerActions}>
+                  <span className={`${styles.status} ${styles[order.status]}`}>
+                    {order.status}
+                  </span>
+                  <button 
+                    className={styles.deleteButton}
+                    onClick={() => handleDeleteClick(order.id)}
+                    title="Supprimer la commande"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                  
+                  {showDeleteConfirm === order.id && (
+                    <div className={styles.deleteConfirm}>
+                      <p>Voulez-vous supprimer cette commande ?</p>
+                      <div className={styles.deleteActions}>
+                        <button onClick={() => handleDeleteConfirm(order.id)}>
+                          Supprimer
+                        </button>
+                        <button onClick={() => setShowDeleteConfirm(null)}>
+                          Annuler
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className={styles.headerInfo}>
-                  <h3>{order.productName}</h3>
-                  <p className={styles.price}>{order.productPrice.toLocaleString()} FCFA</p>
-                  <div className={styles.timeInfo}>
-                    <Clock size={16} />
-                    <span>Commandé il y a {elapsedTimes[order.orderTime]}</span>
-                  </div>
-                </div>
-                <button 
-                  className={styles.deleteButton}
-                  onClick={() => handleDeleteSingle(order)}
-                  title="Supprimer la commande"
-                >
-                  <Trash2 size={20} />
-                </button>
               </div>
-
+              
               <div className={styles.orderDetails}>
-                <div className={styles.detailsSection}>
-                  <h4>Informations client</h4>
-                  <p><strong>Nom:</strong> {order.name}</p>
-                  <p><strong>Email:</strong> {order.email}</p>
-                  <p><strong>Téléphone:</strong> {order.phone}</p>
-                  <p><strong>Adresse:</strong> {order.address}</p>
+                <div className={styles.orderInfo}>
+                  <p><strong>Commandé le:</strong> {formatDate(order.orderDate)}</p>
+                  <p><strong>Livraison prévue:</strong> {formatDate(order.deliveryTime)}</p>
+                  {order.status === 'en cours' && (
+                    <p className={styles.countdown}>
+                      <strong>Temps restant:</strong> {formatRemainingTime(order.remainingTime)}
+                    </p>
+                  )}
                 </div>
-
-                <div className={styles.detailsSection}>
-                  <h4>Détails commande</h4>
-                  <p><strong>Taille:</strong> {order.size}</p>
+                
+                <div className={styles.productDetails}>
+                  <p><strong>Taille:</strong> {order.selectedSize}</p>
                   <p><strong>Quantité:</strong> {order.quantity}</p>
-                  <p><strong>Date de commande:</strong> {formatDate(order.orderDate)}</p>
-                  <p><strong>Livraison prévue:</strong> {formatDate(order.deliveryDate)}</p>
-                  <p className={styles.deliveryTime}>
-                    <strong>Temps restant:</strong> {calculateRemainingTime(order.deliveryDate)}
-                  </p>
+                  <p><strong>Prix total:</strong> {order.totalPrice} 000 FCFA</p>
+                </div>
+                
+                <div className={styles.customerInfo}>
+                  <p><strong>Nom:</strong> {order.name}</p>
+                  <p><strong>Adresse:</strong> {order.address}</p>
+                  <p><strong>Téléphone:</strong> {order.phone}</p>
                 </div>
               </div>
             </div>
           ))}
-          {orders.length === 0 && (
-            <p className={styles.noOrders}>Aucune commande pour le moment</p>
-          )}
+          
         </div>
+        
       </div>
-
-      {showConfirmDelete && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h2>Confirmation</h2>
-            <p>
-              {orderToDelete === null 
-                ? 'Voulez-vous vraiment supprimer toutes les commandes ?' 
-                : 'Voulez-vous vraiment supprimer cette commande ?'
-              }
-            </p>
-            <div className={styles.modalButtons}>
-              <button 
-                className={styles.confirmButton}
-                onClick={confirmDelete}
-              >
-                Confirmer
-              </button>
-              <button 
-                className={styles.cancelButton}
-                onClick={() => setShowConfirmDelete(false)}
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    </ProtectedRoute>
   );
 }
